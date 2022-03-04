@@ -1,13 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/style.css">
-    <title>Document</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
 </head>
+
 <body>
+    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <div class="navbar-item title">Weather Dashboard</div>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+            </a>
+        </div>
+        </div>
+    </nav>
+
+    <div class="columns">
+        <div class="column is-3">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Search for a City">
+                            </div>
+                            <div class="control">
+                                <a id="search-btn" class="button is-info">
+                                    Search
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="card">
+                <div class="card-content">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                          Placeholder City
+                        </p>
+                    </header>
+                        <div class="card-content">
+                            <div class="content">
+                              Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
+                            </div>
+                          </div>
+                      
+                </div>
+            </div>
+            <div class="columns">
+                
+            </div>
+        </div>
+
+    </div>
+
+
     <script src="./assets/script.js"></script>
 </body>
+
 </html>
