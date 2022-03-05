@@ -1,0 +1,8 @@
+#search-alert {
+    display: none;
+}
+
+#search-help:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

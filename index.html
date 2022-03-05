@@ -13,57 +13,105 @@
     <nav class="navbar is-info" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <div class="navbar-item title">Weather Dashboard</div>
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-                data-target="navbarBasicExample">
-            </a>
         </div>
         </div>
     </nav>
 
-    <div class="columns">
-        <div class="column is-3">
-            <div class="card">
-                <div class="card-content">
-                    <div class="media">
-                        <div class="field has-addons">
-                            <div class="control">
-                                <input id="search-field" class="input" type="text" placeholder="Search for a City">
-                            </div>
-                            <div class="control">
-                                <a id="search-btn" class="button is-info">
-                                    Search
-                                </a>
+    <div class="tile is-ancestor">
+        <div class="tile is-vertical is-3">
+            <div class="tile">
+                <div class="tile is-parent is-vertical">
+                    <div class="tile is-child card">
+                        <div class="card-content">
+                            <div class="media">
+                                <div class="field has-addons">
+                                    <div class="control">
+                                        <input id="search-field" class="input" type="text"
+                                            placeholder="Search for a City">
+                                        <p id="search-alert" class="help is-danger">
+                                            See help for search parameters
+                                        </p>
+                                    </div>
+                                    <div class="control">
+                                        <a id="search-btn" class="button is-info">
+                                            Search
+                                        </a>
+                                        <div class="level-right">
+                                            <p id="search-help" class="modal-trigger help is-info"
+                                                data-target="search-help-modal">Help</p>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="tile is-child card">
+                        this is where the history goes
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="column">
-            <div class="card">
-                <div class="card-content">
-                    <header class="card-header">
-                        <p class="card-header-title">
-                          Placeholder City
-                        </p>
-                    </header>
+        <div class="tile is-parent">
+            <div class="tile is-vertical">
+                <div class="tile is-parent">
+                    <div class="tile is-child card">
                         <div class="card-content">
-                            <div class="content">
-                              Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit non mi porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Placeholder City
+                                </p>
+                            </header>
+                            <div class="card-content">
+                                <div class="content">
+                                    Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at eros. Donec id elit
+                                    non mi
+                                    porta gravida at eget metus. Cum sociis natoque penatibus et magnis dis parturient
+                                    montes,
+                                    nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
+                                </div>
                             </div>
-                          </div>
-                      
+
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="columns">
-                
+                <div class="tile is-parent">
+                    <div class="tile is-child card">forecasts</div>
+                    <div class="tile is-child card">forecasts</div>
+                    <div class="tile is-child card">forecasts</div>
+                    <div class="tile is-child card">forecasts</div>
+                    <div class="tile is-child card">forecasts</div>
+                </div>
             </div>
         </div>
 
     </div>
 
+    <div id="search-help-modal" class="modal">
+        <div class="modal-background"></div>
 
+        <div class="modal-content">
+            <div class="box">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Weather Dashboard Search Guidelines</p>
+                </header>
+
+                <ul>
+                    <li>Alphabetic characters, commas, and spaces only</li>
+                    <li>If in US, can narrow result by using city first, then state code, separated by comma
+                        <div class="ml-5">Example: Chicago, Il</div>
+                    </li>
+                    <li>If a common city name, search will return top 10 results</li>
+
+
+                </ul>
+                <!-- Your content -->
+            </div>
+        </div>
+
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
     <script src="./assets/script.js"></script>
 </body>
 
