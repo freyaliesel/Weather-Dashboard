@@ -33,6 +33,7 @@ function collectUserInput(event) {
 // THIS NEEDS MORE FINE TUNING FOR USER FRIENDLY EXPERIENCE
 function parseUserInput(input) {
     var searchParam;
+    var name;
     // if there's a comma, assume correct useage
     // needs its own further conditions to handle spaces in city name
     // then join them back together into the search parameters to call the function
@@ -48,6 +49,7 @@ function parseUserInput(input) {
     // if just alphabetic, send it through unchanged
     else if (isAlpha(input)) {
         searchParam = input;
+        name = input;
     }
     // if includes non-alphabetic characters other than spaces or commas, reject
     else {
@@ -55,21 +57,38 @@ function parseUserInput(input) {
         return;
     }
     getWeatherInfo(searchParam);
+    saveSearch(name, searchParam);
 }
 
-function saveToWeatherObject(data){
-console.log("saving to weather object")
-var weather = {};
-weather.name = data.name;
-weather.date = dayjs().format("MMM D, YYYY");
-weather.temp = data.temp;
-weather.humidity = data.humidity;
+function saveSearch(name, param) {
+    var search = {
+        name: name,
+        param: param,
+    };
+    var searchHistory = [search];
 
+    var savedSearches = JSON.parse(localStorage.getItem(searchHistory));
+    if (savedSearches !== null) {
+        console.log(savedSearches);
+        searchHistory = searchHistory.concat(savedSearches);
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+        displaySearchHistory(searchHistory);
+    } else {
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+        displaySearchHistory(searchHistory);
+    }
+}
 
+function displaySearchHistory(searchHistory) {
+  console.log("displaying search history")
+  // array.forEach(element => {
+  //   var document.createElement
+    
+  // });
 }
 
 function displayCurrentWeather(data) {
-  console.log("displaying current weather");
+    console.log("displaying current weather");
     // current weather
     // City Name & date
     // icon for weather conditions
@@ -80,7 +99,7 @@ function displayCurrentWeather(data) {
 }
 
 function displayForecast(data) {
-  console.log("displaying Forecast");
+    console.log("displaying Forecast");
     // 5-day forecast handles:
     // date
     // icon for weather conditions
@@ -100,7 +119,7 @@ function getWeatherInfo(location) {
         })
         .then(function (data) {
             console.log(data);
-            saveToWeatherObject(data);
+            displayCurrentWeather(data);
             // call function getting forecast information
             getForecast(data.coord);
         });
