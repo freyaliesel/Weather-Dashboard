@@ -67,9 +67,9 @@ function saveSearch(name, param) {
     };
     var searchHistory = [search];
 
-    var savedSearches = JSON.parse(localStorage.getItem(searchHistory));
+    var savedSearches = JSON.parse(localStorage.getItem("searchHistory"));
+    console.log(savedSearches);
     if (savedSearches !== null) {
-        console.log(savedSearches);
         searchHistory = searchHistory.concat(savedSearches);
         localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
         displaySearchHistory(searchHistory);
@@ -81,10 +81,11 @@ function saveSearch(name, param) {
 
 function displaySearchHistory(searchHistory) {
   console.log("displaying search history")
-  // array.forEach(element => {
-  //   var document.createElement
+  searchHistory.forEach(element => {
+    console.log(element);
+    var divEl = document.createElement("div")
     
-  // });
+  });
 }
 
 function displayCurrentWeather(data) {
