@@ -16,6 +16,42 @@ const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
 
 // function definitions
 
+function displaySearchHistory() {
+  console.log("displaying search history");
+  let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+  let parentEl = document.getElementById("search-history");
+  if (searchHistory !== null) {
+      // if (parentEl.hasChildNodes()) {
+      emptyElement(parentEl);
+      // }
+  } else {
+      return;
+  }
+  populateButtons(searchHistory, parentEl);
+}
+
+function emptyElement(pEl) {
+  let elements = pEl.children.length;
+  // console.log(pEl.children);
+  if (pEl.hasChildNodes()) {
+      for (i = 0; i < elements; i++) {
+          pEl.removeChild(pEl.children[0]);
+      }
+  } else {
+      return;
+  }
+}
+
+function populateButtons(history, parentEl) {
+  history.forEach((element) => {
+      var buttonEl = document.createElement("button");
+      buttonEl.className = "button is-info m-1 history-btn";
+      buttonEl.innerHTML = element.name;
+      buttonEl.value = element.param;
+      parentEl.appendChild(buttonEl);
+  });
+}
+
 // collect search parameters from user
 function collectUserInput(event) {
     event.preventDefault();
@@ -62,6 +98,7 @@ function parseUserInput(input) {
     saveSearch(name, searchParam);
 }
 
+// adjust this: save coordinates instead of search parameters, to bypass first api call
 function saveSearch(name, param) {
     // var search = [{name: name, param: param}];
     // searchHistory = searchHistory.concat(search);
@@ -75,52 +112,6 @@ function saveSearch(name, param) {
         localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
     }
     displaySearchHistory();
-}
-
-function displaySearchHistory() {
-    console.log("displaying search history");
-    let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
-    let parentEl = document.getElementById("search-history");
-    if (searchHistory !== null) {
-        // if (parentEl.hasChildNodes()) {
-        emptyElement(parentEl);
-        // }
-    } else {
-        return;
-    }
-    populateButtons(searchHistory, parentEl);
-}
-
-function emptyElement(pEl) {
-    let elements = pEl.children.length;
-    // console.log(pEl.children);
-    if (pEl.hasChildNodes()) {
-        for (i = 0; i < elements; i++) {
-            pEl.removeChild(pEl.children[0]);
-        }
-    } else {
-        return;
-    }
-}
-
-function populateButtons(history, parentEl) {
-    history.forEach((element) => {
-        var buttonEl = document.createElement("button");
-        buttonEl.className = "button is-info m-1 history-btn";
-        buttonEl.innerHTML = element.name;
-        buttonEl.value = element.param;
-        parentEl.appendChild(buttonEl);
-    });
-}
-
-function displayForecast(data) {
-    console.log("displaying Forecast");
-    // 5-day forecast handles:
-    // date
-    // icon for weather conditions
-    // temperature
-    // wind speed
-    // humidity
 }
 
 function getWeatherInfo(location) {
@@ -205,6 +196,16 @@ function displayCurrentWeather(data) {
       li.textContent = (`Humidity: ${data}`)
 
     // uv index with color coding for favorable/moderate/severe
+}
+
+function displayForecast(data) {
+  console.log("displaying Forecast");
+  // 5-day forecast handles:
+  // date
+  // icon for weather conditions
+  // temperature
+  // wind speed
+  // humidity
 }
 
 window.onload = function () {
