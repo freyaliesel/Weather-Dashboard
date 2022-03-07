@@ -17,39 +17,39 @@ const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
 // function definitions
 
 function displaySearchHistory() {
-  console.log("displaying search history");
-  let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
-  let parentEl = document.getElementById("search-history");
-  if (searchHistory !== null) {
-      // if (parentEl.hasChildNodes()) {
-      emptyElement(parentEl);
-      // }
-  } else {
-      return;
-  }
-  populateButtons(searchHistory, parentEl);
+    console.log("displaying search history");
+    let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+    let parentEl = document.getElementById("search-history");
+    if (searchHistory !== null) {
+        // if (parentEl.hasChildNodes()) {
+        emptyElement(parentEl);
+        // }
+    } else {
+        return;
+    }
+    populateButtons(searchHistory, parentEl);
 }
 
 function emptyElement(pEl) {
-  let elements = pEl.children.length;
-  // console.log(pEl.children);
-  if (pEl.hasChildNodes()) {
-      for (i = 0; i < elements; i++) {
-          pEl.removeChild(pEl.children[0]);
-      }
-  } else {
-      return;
-  }
+    let elements = pEl.children.length;
+    // console.log(pEl.children);
+    if (pEl.hasChildNodes()) {
+        for (i = 0; i < elements; i++) {
+            pEl.removeChild(pEl.children[0]);
+        }
+    } else {
+        return;
+    }
 }
 
 function populateButtons(history, parentEl) {
-  history.forEach((element) => {
-      var buttonEl = document.createElement("button");
-      buttonEl.className = "button is-info m-1 history-btn";
-      buttonEl.innerHTML = element.name;
-      buttonEl.value = element.param;
-      parentEl.appendChild(buttonEl);
-  });
+    history.forEach((element) => {
+        var buttonEl = document.createElement("button");
+        buttonEl.className = "button is-info m-1 history-btn";
+        buttonEl.innerHTML = element.name;
+        // buttonEl.value = element.param;
+        parentEl.appendChild(buttonEl);
+    });
 }
 
 // collect search parameters from user
@@ -94,27 +94,11 @@ function parseUserInput(input) {
         alert.style.display = "inline";
         return;
     }
-    getWeatherInfo(searchParam);
-    saveSearch(name, searchParam);
+    getLocationInfo(searchParam);
+    // saveSearch(name, searchParam);
 }
 
-// adjust this: save coordinates instead of search parameters, to bypass first api call
-function saveSearch(name, param) {
-    // var search = [{name: name, param: param}];
-    // searchHistory = searchHistory.concat(search);
-    let searchHistory = [{ name: name, param: param }];
-    let savedSearches = JSON.parse(localStorage.getItem("searchHistory"));
-
-    if (savedSearches !== null) {
-        searchHistory = searchHistory.concat(savedSearches);
-        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-    } else {
-        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-    }
-    displaySearchHistory();
-}
-
-function getWeatherInfo(location) {
+function getLocationInfo(location) {
     console.log("getting current weather");
     fetch(APIurl + "weather?q=" + location + "&units=imperial" + APIkey, {
         method: "GET",
@@ -126,30 +110,68 @@ function getWeatherInfo(location) {
         })
         .then(function (data) {
             console.log(data);
-            displayCurrentWeather(data);
+            // displayCurrentWeather(data);
             // call function getting forecast information
             getForecast(data.coord);
+            saveSearch(data);
         });
 }
 
+// save coordinates instead of search parameters, to bypass first api call
+function saveSearch(data) {
+    // var search = [{name: name, param: param}];
+    // searchHistory = searchHistory.concat(search);
+    var searchHistory = [
+        {
+            name: data.name,
+            param: {
+                lat: data.coord.lat,
+                lon: data.coord.lon,
+            },
+        },
+    ];
+    let savedSearches = JSON.parse(localStorage.getItem("searchHistory"));
+
+    if (savedSearches !== null) {
+        searchHistory = searchHistory.concat(savedSearches);
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+    } else {
+        localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
+    }
+    displaySearchHistory();
+}
+
+function getSavedSearch(name) {
+  console.log(name);
+  let history = JSON.parse(localStorage.getItem("searchHistory"));
+history.forEach(location => {
+  if (location.name && name) {
+    getForecast(location.param);
+  } else {
+    alert.style.display = "inline";
+  }
+  
+});
+}
+
 function getForecast(coords) {
-    console.log("getting forecast")
-        const PARAM = "&units=imperial&exclude=minutely,hourly";
-        var lat = "lat=" + coords.lat;
-        var lon = "&lon=" + coords.lon;
-        console.log(`lat: ${lat}\nlon: ${lon}`);
-        fetch(APIurl + "onecall?" + lat + lon + PARAM + APIkey, {
-            method: "GET",
-            credentials: "same-origin",
-            redirect: "follow",
+    console.log("getting forecast");
+    const PARAM = "&units=imperial&exclude=minutely,hourly";
+    var lat = "lat=" + coords.lat;
+    var lon = "&lon=" + coords.lon;
+    // console.log(`lat: ${lat}\nlon: ${lon}`);
+    fetch(APIurl + "onecall?" + lat + lon + PARAM + APIkey, {
+        method: "GET",
+        credentials: "same-origin",
+        redirect: "follow",
+    })
+        .then(function (response) {
+            return response.json();
         })
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                console.log(data);
-                displayForecast(data);
-            });
+        .then(function (data) {
+            console.log(data);
+            displayForecast(data);
+        });
 }
 
 function displayCurrentWeather(data) {
@@ -180,32 +202,32 @@ function displayCurrentWeather(data) {
     // temperature
     let listEl = document.createElement("ul");
     listEl.style.listStyle = "none";
-    let cardEl = document.getElementById("weather-info")
+    let cardEl = document.getElementById("weather-info");
     cardEl.append(listEl);
     let li = document.createElement("li");
-    li.textContent =(`Temp: ${data.main.temp}°F`);
+    li.textContent = `Temp: ${data.main.temp}°F`;
     listEl.append(li);
-    
+
     // wind speed
-      li = document.createElement("li");
-      li.textContent = (`Wind: ${data.wind.speed} MPH`);
-      listEl.append(li);
+    li = document.createElement("li");
+    li.textContent = `Wind: ${data.wind.speed} MPH`;
+    listEl.append(li);
 
     // humidity
     li = document.createElement("li");
-      li.textContent = (`Humidity: ${data}`)
+    li.textContent = `Humidity: ${data}`;
 
     // uv index with color coding for favorable/moderate/severe
 }
 
 function displayForecast(data) {
-  console.log("displaying Forecast");
-  // 5-day forecast handles:
-  // date
-  // icon for weather conditions
-  // temperature
-  // wind speed
-  // humidity
+    console.log("displaying Forecast");
+    // 5-day forecast handles:
+    // date
+    // icon for weather conditions
+    // temperature
+    // wind speed
+    // humidity
 }
 
 window.onload = function () {
@@ -221,7 +243,8 @@ document
             collectUserInput(event);
         } else if (target.className.includes("history-btn")) {
             //  console.log(target)
-            getWeatherInfo(target.value);
+            // getWeatherInfo(target.value);
+            getSavedSearch(target.textContent);
         }
     });
 
