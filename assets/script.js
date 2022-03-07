@@ -7,8 +7,10 @@
 
 // global variables
 var alert = document.getElementById("search-alert");
+
 const apiURL = "https://api.openweathermap.org/data/2.5/";
 const APIkey = "&appid=5a1140fa35f8197c27125cdd0d68a102";
+
 // found this as a snippet
 const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
 
@@ -61,31 +63,49 @@ function parseUserInput(input) {
 }
 
 function saveSearch(name, param) {
-    var search = {
-        name: name,
-        param: param,
-    };
-    var searchHistory = [search];
-
+    // var search = [{name: name, param: param}];
+    // searchHistory = searchHistory.concat(search);
+    var searchHistory = [{ name: name, param: param }];
     var savedSearches = JSON.parse(localStorage.getItem("searchHistory"));
-    console.log(savedSearches);
+
     if (savedSearches !== null) {
         searchHistory = searchHistory.concat(savedSearches);
         localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-        displaySearchHistory(searchHistory);
     } else {
         localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
-        displaySearchHistory(searchHistory);
     }
+    displaySearchHistory();
 }
 
-function displaySearchHistory(searchHistory) {
-  console.log("displaying search history")
-  searchHistory.forEach(element => {
-    console.log(element);
-    var divEl = document.createElement("div")
-    
-  });
+// this is where we are working
+function displaySearchHistory() {
+    console.log("displaying search history");
+
+    var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+
+    var parentEl = document.getElementById("search-history");
+    var elements = parentEl.children.length;
+    if (searchHistory !== null) {
+        if (parentEl.hasChildNodes()) {
+            // console.log(parentEl.children);
+            for (i = 0; i < elements; i++) {
+              parentEl.removeChild(parentEl.children[0])
+            }
+        }
+    } else {
+        return;
+    }
+    populateButtons(searchHistory, parentEl);
+}
+
+function populateButtons(history, parentEl) {
+    history.forEach((element) => {
+        var buttonEl = document.createElement("button");
+        buttonEl.className = "button is-info m-1 history-btn";
+        buttonEl.innerHTML = element.name;
+        buttonEl.value = element.param;
+        parentEl.appendChild(buttonEl);
+    });
 }
 
 function displayCurrentWeather(data) {
@@ -110,6 +130,7 @@ function displayForecast(data) {
 }
 
 function getWeatherInfo(location) {
+    console.log("getting current weather");
     fetch(apiURL + "weather?q=" + location + "&units=imperial" + APIkey, {
         method: "GET",
         credentials: "same-origin",
@@ -127,28 +148,44 @@ function getWeatherInfo(location) {
 }
 
 function getForecast(coords) {
-    const PARAM = "&units=imperial&exclude=minutely,hourly";
-    var lat = "lat=" + coords.lat;
-    var lon = "&lon=" + coords.lon;
-    console.log(`lat: ${lat}\nlon: ${lon}`);
+// console.log("getting forecast")
+//     const PARAM = "&units=imperial&exclude=minutely,hourly";
+//     var lat = "lat=" + coords.lat;
+//     var lon = "&lon=" + coords.lon;
+//     console.log(`lat: ${lat}\nlon: ${lon}`);
 
-    fetch(apiURL + "onecall?" + lat + lon + PARAM + APIkey, {
-        method: "GET",
-        credentials: "same-origin",
-        redirect: "follow",
-    })
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (data) {
-            console.log(data);
-            displayForecast(data);
-        });
+//     fetch(apiURL + "onecall?" + lat + lon + PARAM + APIkey, {
+//         method: "GET",
+//         credentials: "same-origin",
+//         redirect: "follow",
+//     })
+//         .then(function (response) {
+//             return response.json();
+//         })
+//         .then(function (data) {
+//             console.log(data);
+//             displayForecast(data);
+//         });
 }
 
+window.onload = function () {
+    displaySearchHistory();
+};
+
 document
-    .getElementById("search-btn")
-    .addEventListener("click", collectUserInput);
+    .getElementById("search-hub")
+    .addEventListener("click", function(event){
+      var target = event.target;
+      
+     if (target.id == "search-btn"){
+       console.log("search button")
+       collectUserInput(event);
+     }
+     else if (target.className.includes("history-btn")){
+       console.log(target)
+       getWeatherInfo(target.value);
+     }
+    });
 
 // script from Bulma for handling the modal
 document.addEventListener("DOMContentLoaded", () => {
@@ -198,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.keyCode === 27) {
             // Escape key
             closeAllModals();
-        }
-    });
-});
+          }
+        });
+      });
+      
