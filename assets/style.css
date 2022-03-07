@@ -1,3 +1,8 @@
+img {
+    background-color: #3e8dcf;
+    border-radius: 50%;
+}
+
 #search-alert {
     display: none;
 }
