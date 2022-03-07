@@ -19,8 +19,8 @@ const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
 // collect search parameters from user
 function collectUserInput(event) {
     event.preventDefault();
-    var inputEl = document.getElementById("search-field");
-    var city = inputEl.value.trim();
+    let inputEl = document.getElementById("search-field");
+    let city = inputEl.value.trim();
     console.log(city.length);
     if (city.length > 0) {
         console.log(`original string: "${city}"`);
@@ -34,13 +34,13 @@ function collectUserInput(event) {
 // parse user input for search parameters
 // THIS NEEDS MORE FINE TUNING FOR USER FRIENDLY EXPERIENCE
 function parseUserInput(input) {
-    var searchParam;
-    var name;
+    let searchParam;
+    let name;
     // if there's a comma, assume correct useage
     // needs its own further conditions to handle spaces in city name
     // then join them back together into the search parameters to call the function
     if (input.includes(",")) {
-        var state = input.slice(input.indexOf(",") + 1).trim();
+        let state = input.slice(input.indexOf(",") + 1).trim();
         console.log(`string after slice: "${input}"\n new string: "${state}"`);
     }
     // if inner spaces, replace inner spaces with '+'
@@ -65,8 +65,8 @@ function parseUserInput(input) {
 function saveSearch(name, param) {
     // var search = [{name: name, param: param}];
     // searchHistory = searchHistory.concat(search);
-    var searchHistory = [{ name: name, param: param }];
-    var savedSearches = JSON.parse(localStorage.getItem("searchHistory"));
+    let searchHistory = [{ name: name, param: param }];
+    let savedSearches = JSON.parse(localStorage.getItem("searchHistory"));
 
     if (savedSearches !== null) {
         searchHistory = searchHistory.concat(savedSearches);
@@ -77,25 +77,26 @@ function saveSearch(name, param) {
     displaySearchHistory();
 }
 
-// this is where we are working
 function displaySearchHistory() {
     console.log("displaying search history");
-
-    var searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
-
-    var parentEl = document.getElementById("search-history");
-    var elements = parentEl.children.length;
+    let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+    let parentEl = document.getElementById("search-history");
     if (searchHistory !== null) {
         if (parentEl.hasChildNodes()) {
-            // console.log(parentEl.children);
-            for (i = 0; i < elements; i++) {
-              parentEl.removeChild(parentEl.children[0])
-            }
+            emptyElement(parentEl);
         }
     } else {
         return;
     }
     populateButtons(searchHistory, parentEl);
+}
+
+function emptyElement(pEl) {
+    let elements = pEl.children.length;
+    // console.log(pEl.children);
+    for (i = 0; i < elements; i++) {
+        pEl.removeChild(pEl.children[0]);
+    }
 }
 
 function populateButtons(history, parentEl) {
@@ -106,17 +107,6 @@ function populateButtons(history, parentEl) {
         buttonEl.value = element.param;
         parentEl.appendChild(buttonEl);
     });
-}
-
-function displayCurrentWeather(data) {
-    console.log("displaying current weather");
-    // current weather
-    // City Name & date
-    // icon for weather conditions
-    // temperature
-    // humidity
-    // wind speed
-    // uv index with color coding for favorable/moderate/severe
 }
 
 function displayForecast(data) {
@@ -148,24 +138,50 @@ function getWeatherInfo(location) {
 }
 
 function getForecast(coords) {
-// console.log("getting forecast")
-//     const PARAM = "&units=imperial&exclude=minutely,hourly";
-//     var lat = "lat=" + coords.lat;
-//     var lon = "&lon=" + coords.lon;
-//     console.log(`lat: ${lat}\nlon: ${lon}`);
+    // console.log("getting forecast")
+    //     const PARAM = "&units=imperial&exclude=minutely,hourly";
+    //     var lat = "lat=" + coords.lat;
+    //     var lon = "&lon=" + coords.lon;
+    //     console.log(`lat: ${lat}\nlon: ${lon}`);
+    //     fetch(apiURL + "onecall?" + lat + lon + PARAM + APIkey, {
+    //         method: "GET",
+    //         credentials: "same-origin",
+    //         redirect: "follow",
+    //     })
+    //         .then(function (response) {
+    //             return response.json();
+    //         })
+    //         .then(function (data) {
+    //             console.log(data);
+    //             displayForecast(data);
+    //         });
+}
 
-//     fetch(apiURL + "onecall?" + lat + lon + PARAM + APIkey, {
-//         method: "GET",
-//         credentials: "same-origin",
-//         redirect: "follow",
-//     })
-//         .then(function (response) {
-//             return response.json();
-//         })
-//         .then(function (data) {
-//             console.log(data);
-//             displayForecast(data);
-//         });
+function displayCurrentWeather(data) {
+    // first, clear the elements
+
+    console.log("displaying current weather");
+    let cityNameEl = document.getElementById("city-name");
+    // City Name & date
+    cityNameEl.textContent = `${data.name} - ${dayjs().format("MMM D, YYYY")}`;
+
+    // icon for weather conditions
+    let contentEl = document.getElementById("weather-info");
+    // current weather
+    let iconCode = data.weather[0].icon;
+    let iconEl = document.createElement("img");
+    iconEl.setAttribute(
+        "src",
+        `http://openweathermap.org/img/wn/${iconCode}@2x.png`
+    );
+    iconEl.setAttribute("alt", data.weather[0].description);
+    iconEl.style.display = "inline";
+    iconEl.className = "image is-64x64 is-rounded";
+    cityNameEl.insertAdjacentElement("beforebegin", iconEl);
+    // temperature
+    // humidity
+    // wind speed
+    // uv index with color coding for favorable/moderate/severe
 }
 
 window.onload = function () {
@@ -174,17 +190,15 @@ window.onload = function () {
 
 document
     .getElementById("search-hub")
-    .addEventListener("click", function(event){
-      var target = event.target;
-      
-     if (target.id == "search-btn"){
-       console.log("search button")
-       collectUserInput(event);
-     }
-     else if (target.className.includes("history-btn")){
-       console.log(target)
-       getWeatherInfo(target.value);
-     }
+    .addEventListener("click", function (event) {
+        let target = event.target;
+        if (target.id == "search-btn") {
+            //  console.log("search button")
+            collectUserInput(event);
+        } else if (target.className.includes("history-btn")) {
+            //  console.log(target)
+            getWeatherInfo(target.value);
+        }
     });
 
 // script from Bulma for handling the modal
@@ -235,7 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.keyCode === 27) {
             // Escape key
             closeAllModals();
-          }
-        });
-      });
-      
+        }
+    });
+});
