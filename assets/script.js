@@ -33,7 +33,7 @@ function displaySearchHistory() {
 function emptyElement(pEl) {
     let elements = pEl.children.length;
     // console.log(pEl.children);
-    if (pEl.hasChildNodes()) {
+    if (pEl.children.length) {
         for (i = 0; i < elements; i++) {
             pEl.removeChild(pEl.children[0]);
         }
@@ -110,10 +110,15 @@ function getLocationInfo(location) {
         })
         .then(function (data) {
             console.log(data);
-            // displayCurrentWeather(data);
-            // call function getting forecast information
-            // getForecast(data.coord);
-            saveSearch(data);
+            if (data.cod) {
+                alert.style.display = "inline";
+                return;
+            } else {
+                // displayCurrentWeather(data);
+                // call function getting forecast information
+                // getForecast(data.coord);
+                saveSearch(data);
+            }
         });
 }
 
@@ -170,7 +175,7 @@ function getForecast(location) {
         .then(function (data) {
             console.log(data);
             displayCurrentWeather(data, location.name);
-            displayForecast(data.daily);
+            displayForecast(data.daily, data.timezone);
         });
 }
 
@@ -196,20 +201,19 @@ function displayCurrentWeather(data, name) {
     // City Name & date
     let nameEl = document.createElement("p");
     nameEl.className = "card-header-title";
-    nameEl.textContent = `${name} - ${dayjs().tz(data.timezone).format("MMM D, YYYY")}`;
+    nameEl.textContent = `${name} - ${dayjs()
+        .tz(data.timezone)
+        .format("MMM D, YYYY")}`;
     headerEl.append(nameEl);
 
-    // weather alerts
-    // display alert if there is one
-    if (data.alerts !== null) {
-        //display it
-    }
+    // empty the card of previous weather data
+    let cardEl = document.getElementById("weather-info");
+    emptyElement(cardEl);
 
     // current weather
     // temperature
     let listEl = document.createElement("ul");
     listEl.style.listStyle = "none";
-    let cardEl = document.getElementById("weather-info");
     cardEl.append(listEl);
     let li = document.createElement("li");
     li.textContent = `Temp: ${current.temp}°F`;
@@ -227,39 +231,84 @@ function displayCurrentWeather(data, name) {
 
     // uv index with color coding for favorable/moderate/severe
     li = document.createElement("li");
-    li.textContent = `UV Index: `;
-    var spanEl = document.createElement("span")
-    let uvi = 12;
+    li.textContent = "UV Index: ";
+    var spanEl = document.createElement("span");
+    let uvi = current.uvi;
     spanEl.textContent = uvi;
-    spanEl.className = "px-1 pb-1";
+    spanEl.className = "px-2 pb-1";
     spanEl.style.borderRadius = ".25em";
     listEl.append(li);
     li.append(spanEl);
     // let uvi = parseInt(current.uvi);
     if (uvi < 3) {
-      spanEl.style.backgroundColor = "#50C878"
-      spanEl.style.color = "#FFF"
-    }else if (uvi >= 3 && uvi < 6) {
-      spanEl.style.backgroundColor = "#FDDA0D"
-    }
-    else if (uvi >= 6 && uvi < 11) {
-      spanEl.style.backgroundColor = "#D22B2B"
-      spanEl.style.color = "#FFF"
-    }
-    else {
-      spanEl.style.backgroundColor = "#7F00FF"
-      spanEl.style.color = "#FFF"
+        spanEl.style.backgroundColor = "#50C878";
+        spanEl.style.color = "#FFF";
+    } else if (uvi >= 3 && uvi < 6) {
+        spanEl.style.backgroundColor = "#FDDA0D";
+    } else if (uvi >= 6 && uvi < 11) {
+        spanEl.style.backgroundColor = "#D22B2B";
+        spanEl.style.color = "#FFF";
+    } else {
+        spanEl.style.backgroundColor = "#7F00FF";
+        spanEl.style.color = "#FFF";
     }
 }
 
-function displayForecast(data) {
+function displayForecast(days, timezone) {
     console.log("displaying Forecast");
+    console.log(days);
     // 5-day forecast handles:
-    // date
-    // icon for weather conditions
-    // temperature
-    // wind speed
-    // humidity
+    let displayEl = document.getElementById("forecast-container");
+    emptyElement(displayEl);
+
+    for (let i = 0; i < 5; i++) {
+        let cardEl = document.createElement("div");
+        displayEl.append(cardEl);
+        cardEl.className = "tile is-child is-2 px-1";
+        cardEl.style.backgroundColor = "#3e8dcf";
+        cardEl.style.color = "white";
+        cardEl.style.borderRadius = "4px";
+        // date
+        let dateEl = document.createElement("h3");
+        cardEl.append(dateEl);
+        // dateEl.style.className = "is-size-5";
+        dateEl.textContent = `${dayjs()
+            .add(i + 1, "day")
+            .tz(timezone)
+            .format("MMM D, YYYY")}`;
+        // icon for weather conditions
+
+        // temperature
+        // wind speed
+        // humidity
+        let iconCode = days[i].weather[0].icon;
+        let iconEl = document.createElement("img");
+        iconEl.setAttribute(
+            "src",
+            `http://openweathermap.org/img/wn/${iconCode}@2x.png`
+        );
+        iconEl.setAttribute("alt", days[i].weather[0].description);
+        iconEl.style.display = "inline";
+        iconEl.className = "image is-48x48 is-rounded";
+        cardEl.append(iconEl);
+
+        // current weather
+        // temperature
+        let pEl = document.createElement("p");
+        pEl.textContent = `Temp: ${days[i].temp.day}°F`;
+        cardEl.append(pEl);
+
+        // wind speed
+        pEl = document.createElement("p");
+        pEl.textContent = `Wind: ${days[i].wind_speed} MPH`;
+        cardEl.append(pEl);
+
+        // humidity
+        pEl = document.createElement("p");
+        pEl.textContent = `Humidity: ${days[i].humidity}%`;
+        pEl.style.paddingBottom = ".25rem";
+        cardEl.append(pEl);
+    }
 }
 
 window.onload = function () {
