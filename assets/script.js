@@ -8,7 +8,7 @@
 // global variables
 var alert = document.getElementById("search-alert");
 
-const apiURL = "https://api.openweathermap.org/data/2.5/";
+const APIurl = "https://api.openweathermap.org/data/2.5/";
 const APIkey = "&appid=5a1140fa35f8197c27125cdd0d68a102";
 
 // found this as a snippet
@@ -82,9 +82,9 @@ function displaySearchHistory() {
     let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
     let parentEl = document.getElementById("search-history");
     if (searchHistory !== null) {
-        if (parentEl.hasChildNodes()) {
-            emptyElement(parentEl);
-        }
+        // if (parentEl.hasChildNodes()) {
+        emptyElement(parentEl);
+        // }
     } else {
         return;
     }
@@ -94,8 +94,12 @@ function displaySearchHistory() {
 function emptyElement(pEl) {
     let elements = pEl.children.length;
     // console.log(pEl.children);
-    for (i = 0; i < elements; i++) {
-        pEl.removeChild(pEl.children[0]);
+    if (pEl.hasChildNodes()) {
+        for (i = 0; i < elements; i++) {
+            pEl.removeChild(pEl.children[0]);
+        }
+    } else {
+        return;
     }
 }
 
@@ -121,7 +125,7 @@ function displayForecast(data) {
 
 function getWeatherInfo(location) {
     console.log("getting current weather");
-    fetch(apiURL + "weather?q=" + location + "&units=imperial" + APIkey, {
+    fetch(APIurl + "weather?q=" + location + "&units=imperial" + APIkey, {
         method: "GET",
         credentials: "same-origin",
         redirect: "follow",
@@ -138,36 +142,32 @@ function getWeatherInfo(location) {
 }
 
 function getForecast(coords) {
-    // console.log("getting forecast")
-    //     const PARAM = "&units=imperial&exclude=minutely,hourly";
-    //     var lat = "lat=" + coords.lat;
-    //     var lon = "&lon=" + coords.lon;
-    //     console.log(`lat: ${lat}\nlon: ${lon}`);
-    //     fetch(apiURL + "onecall?" + lat + lon + PARAM + APIkey, {
-    //         method: "GET",
-    //         credentials: "same-origin",
-    //         redirect: "follow",
-    //     })
-    //         .then(function (response) {
-    //             return response.json();
-    //         })
-    //         .then(function (data) {
-    //             console.log(data);
-    //             displayForecast(data);
-    //         });
+    console.log("getting forecast")
+        const PARAM = "&units=imperial&exclude=minutely,hourly";
+        var lat = "lat=" + coords.lat;
+        var lon = "&lon=" + coords.lon;
+        console.log(`lat: ${lat}\nlon: ${lon}`);
+        fetch(APIurl + "onecall?" + lat + lon + PARAM + APIkey, {
+            method: "GET",
+            credentials: "same-origin",
+            redirect: "follow",
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+                displayForecast(data);
+            });
 }
 
 function displayCurrentWeather(data) {
-    // first, clear the elements
-
     console.log("displaying current weather");
-    let cityNameEl = document.getElementById("city-name");
-    // City Name & date
-    cityNameEl.textContent = `${data.name} - ${dayjs().format("MMM D, YYYY")}`;
+    // first, clear the elements
+    let headerEl = document.getElementById("weather-header");
+    emptyElement(headerEl);
 
     // icon for weather conditions
-    let contentEl = document.getElementById("weather-info");
-    // current weather
     let iconCode = data.weather[0].icon;
     let iconEl = document.createElement("img");
     iconEl.setAttribute(
@@ -177,10 +177,33 @@ function displayCurrentWeather(data) {
     iconEl.setAttribute("alt", data.weather[0].description);
     iconEl.style.display = "inline";
     iconEl.className = "image is-64x64 is-rounded";
-    cityNameEl.insertAdjacentElement("beforebegin", iconEl);
+    headerEl.append(iconEl);
+
+    // City Name & date
+    let nameEl = document.createElement("p");
+    nameEl.className = "card-header-title";
+    nameEl.textContent = `${data.name} - ${dayjs().format("MMM D, YYYY")}`;
+    headerEl.append(nameEl);
+
+    // current weather
     // temperature
-    // humidity
+    let listEl = document.createElement("ul");
+    listEl.style.listStyle = "none";
+    let cardEl = document.getElementById("weather-info")
+    cardEl.append(listEl);
+    let li = document.createElement("li");
+    li.textContent =(`Temp: ${data.main.temp}°F`);
+    listEl.append(li);
+    
     // wind speed
+      li = document.createElement("li");
+      li.textContent = (`Wind: ${data.wind.speed} MPH`);
+      listEl.append(li);
+
+    // humidity
+    li = document.createElement("li");
+      li.textContent = (`Humidity: ${data}`)
+
     // uv index with color coding for favorable/moderate/severe
 }
 
