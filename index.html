@@ -10,83 +10,69 @@
 </head>
 
 <body>
-    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-info mb-6" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <div class="navbar-item title">Weather Dashboard</div>
         </div>
-        </div>
     </nav>
 
-    <div class="tile is-ancestor">
-        <div class="tile is-vertical is-3">
-            <div class="tile">
-                <div id="search-hub" class="tile is-parent is-vertical">
-                    <div class="tile is-child card">
-                        <div class="card-content">
-                            <div class="media">
-                                <div class="field has-addons">
-                                    <div class="control">
-                                        <input id="search-field" class="input" type="text"
-                                            placeholder="Search for a City">
-                                        <p id="search-alert" class="help is-danger">
-                                            See help for search parameters
-                                        </p>
-                                    </div>
-                                    <div class="control">
-                                        <button id="search-btn" class="button is-info" type="submit">Search
-                                        </button>
-                                        <div class="level-right">
-                                            <p id="search-help" class="modal-trigger help is-info"
-                                                data-target="search-help-modal">Help</p>
-                                        </div>
-
-                                    </div>
-                                </div>
+    <div class="container is-fluid">
+        <div id="col-a" class="columns">
+            <div id="search-hub" class="column is-4-desktop is-two-fifths-tablet">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="field has-addons has-addons-right">
+                            <div class="control is-expanded">
+                                <input id="search-field" class="input" type="text" placeholder="Search for a City" />
                             </div>
-                        </div>
-                    </div>
-                    <div id="search-history" class="tile is-child card">
-                        <!-- this is where the search history goes -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tile is-parent">
-            <div class="tile is-vertical">
-                <div class="tile is-parent">
-                    <div class="tile is-child card">
-                        <div id="display" class="card-content">
-                            <header id="weather-header" class="card-header">
-                                <p class="card-header-title">
-
+                            <p id="search-alert" class="help is-danger">
+                                See help for search parameters
+                            </p>
+                            <div class="control">
+                                <button id="search-btn" class="button is-info" type="submit">
+                                    Search
+                                </button>
+                                <div class="level-right">
+                                </div>
+                                <p id="search-help" class="modal-trigger help is-info" data-target="search-help-modal">
+                                    Help
                                 </p>
-                            </header>
-                            <div class="card-content">
-                                <div id="weather-info">
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="forecast-container" class="tile is-parent is-justify-content-space-evenly">
+                <div id="search-history" class="card buttons"></div>
+            </div>
+
+            <div id="col-b" class="column">
+                <article id="display" class="message is-info">
+                    <div id="weather-header" class="message-header">
+                    </div>
+                    <div id="weather-info" class="message-body">
+                        <p>
+                            Search for a city to see current weather conditions,
+                            and 5 day forecast.
+                        </p>
+                    </div>
+                </article>
+
+                <div id="forecast-container" class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-space-evenly">
                     <!-- prototype
-                    <div class="tile is-child card">forecasts</div> -->
+                        <div class="tile is-child card">forecasts</div> -->
                 </div>
             </div>
         </div>
-
     </div>
 
     <div id="search-help-modal" class="modal">
         <div class="modal-background"></div>
-
         <div class="modal-content">
             <div class="box">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Weather Dashboard Search Guidelines</p>
+                    <p class="modal-card-title">
+                        Weather Dashboard Search Guidelines
+                    </p>
                 </header>
-
                 <ul>
                     <li>Check spelling.</li>
                     <li>Alphabetic characters, commas, and spaces only.</li>
@@ -94,15 +80,12 @@
                         <div class="ml-5">Example: Chicago, Il</div>
                     </li>
                     <li>If a common city name, search will return top 5 results</li> -->
-
-
                 </ul>
-                <!-- Your content -->
             </div>
         </div>
-
         <button class="modal-close is-large" aria-label="close"></button>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.8/dayjs.min.js"
         integrity="sha512-bwD3VD/j6ypSSnyjuaURidZksoVx3L1RPvTkleC48SbHCZsemT3VKMD39KknPnH728LLXVMTisESIBOAb5/W0Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -112,8 +95,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.8/plugin/timezone.min.js"
         integrity="sha512-5B0kN+0UECcx7IszahbNmyocfPwR5MNpyggUEgq9nb6Sl5apxs8yl5Q2847Gsa3xXZtsFRVUj7TskUyT+TxXqw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>dayjs.extend(window.dayjs_plugin_utc)</script>
-    <script>dayjs.extend(window.dayjs_plugin_timezone)</script>
+    <script>
+        dayjs.extend(window.dayjs_plugin_utc);
+    </script>
+    <script>
+        dayjs.extend(window.dayjs_plugin_timezone);
+    </script>
     <script src="./assets/script.js"></script>
 </body>
 

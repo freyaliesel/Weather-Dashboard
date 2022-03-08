@@ -11,9 +11,6 @@ var alert = document.getElementById("search-alert");
 const APIurl = "https://api.openweathermap.org/data/2.5/";
 const APIkey = "&appid=5a1140fa35f8197c27125cdd0d68a102";
 
-// found this as a snippet
-const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
-
 // function definitions
 
 function displaySearchHistory() {
@@ -21,9 +18,7 @@ function displaySearchHistory() {
     let searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
     let parentEl = document.getElementById("search-history");
     if (searchHistory !== null) {
-        // if (parentEl.hasChildNodes()) {
         emptyElement(parentEl);
-        // }
     } else {
         return;
     }
@@ -32,7 +27,6 @@ function displaySearchHistory() {
 
 function emptyElement(pEl) {
     let elements = pEl.children.length;
-    // console.log(pEl.children);
     if (pEl.children.length) {
         for (i = 0; i < elements; i++) {
             pEl.removeChild(pEl.children[0]);
@@ -47,7 +41,6 @@ function populateButtons(history, parentEl) {
         var buttonEl = document.createElement("button");
         buttonEl.className = "button is-info m-1 history-btn";
         buttonEl.innerHTML = element.name;
-        // buttonEl.value = element.param;
         parentEl.appendChild(buttonEl);
     });
 }
@@ -72,6 +65,8 @@ function collectUserInput(event) {
 function parseUserInput(input) {
     let searchParam;
     let name;
+    // found this as a snippet
+    const isAlpha = (str) => /^[a-zA-Z]*$/.test(str);
     // if there's a comma, assume correct useage
     // needs its own further conditions to handle spaces in city name
     // then join them back together into the search parameters to call the function
@@ -84,6 +79,7 @@ function parseUserInput(input) {
         searchParam = input.replace(/ /g, "+");
         console.log("search parameters: " + searchParam);
     }
+
     // if just alphabetic, send it through unchanged
     else if (isAlpha(input)) {
         searchParam = input;
@@ -95,7 +91,6 @@ function parseUserInput(input) {
         return;
     }
     getLocationInfo(searchParam);
-    // saveSearch(name, searchParam);
 }
 
 function getLocationInfo(location) {
@@ -109,23 +104,13 @@ function getLocationInfo(location) {
             return response.json();
         })
         .then(function (data) {
-            // console.log(data);
-            // if (data.cod) {
-            //     alert.style.display = "inline";
-            //     return;
-            // } else {
-                // displayCurrentWeather(data);
-                // call function getting forecast information
-                // getForecast(data);
-                saveSearch(data);
+            saveSearch(data);
             // }
         });
 }
 
 // save coordinates instead of search parameters, to bypass first api call
 function saveSearch(data) {
-    // var search = [{name: name, param: param}];
-    // searchHistory = searchHistory.concat(search);
     var search = {
         name: data.name,
         coords: {
@@ -160,11 +145,9 @@ function getSavedSearch(name) {
 
 function getForecast(location) {
     console.log("getting forecast");
-    console.log(location);
     const PARAM = "&units=imperial&exclude=minutely,hourly";
     var lat = "lat=" + location.coords.lat;
     var lon = "&lon=" + location.coords.lon;
-    // console.log(`lat: ${lat}\nlon: ${lon}`);
     fetch(APIurl + "onecall?" + lat + lon + PARAM + APIkey, {
         method: "GET",
         credentials: "same-origin",
@@ -174,7 +157,6 @@ function getForecast(location) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
             displayCurrentWeather(data, location.name);
             displayForecast(data.daily, data.timezone);
         });
@@ -187,31 +169,29 @@ function displayCurrentWeather(data, name) {
     emptyElement(headerEl);
 
     let current = data.current;
-    // icon for weather conditions
-    let iconCode = current.weather[0].icon;
-    let iconEl = document.createElement("img");
-    iconEl.setAttribute(
-        "src",
-        `http://openweathermap.org/img/wn/${iconCode}@2x.png`
-    );
-    iconEl.setAttribute("alt", current.weather[0].description);
-    iconEl.style.display = "inline";
-    iconEl.className = "image is-64x64 is-rounded";
-    headerEl.append(iconEl);
-
+    
     // City Name & date
-    let nameEl = document.createElement("p");
-    nameEl.className = "card-header-title";
+    let nameEl = document.getElementById("weather-header");
     nameEl.textContent = `${name} - ${dayjs()
         .tz(data.timezone)
         .format("MMM D, YYYY")}`;
-    headerEl.append(nameEl);
-
-    // empty the card of previous weather data
-    let cardEl = document.getElementById("weather-info");
-    emptyElement(cardEl);
-
-    // current weather
+        
+        // empty the card of previous weather data
+        let cardEl = document.getElementById("weather-info");
+        emptyElement(cardEl);
+        
+        // current weather
+        // icon for weather conditions
+        let iconCode = current.weather[0].icon;
+        let iconEl = document.createElement("img");
+        iconEl.setAttribute(
+            "src",
+            `http://openweathermap.org/img/wn/${iconCode}@2x.png`
+        );
+        iconEl.setAttribute("alt", current.weather[0].description);
+        iconEl.style.display = "inline";
+        iconEl.className = "image is-96x96 is-rounded";
+        cardEl.append(iconEl);
     // temperature
     let listEl = document.createElement("ul");
     listEl.style.listStyle = "none";
@@ -240,7 +220,6 @@ function displayCurrentWeather(data, name) {
     spanEl.style.borderRadius = ".25em";
     listEl.append(li);
     li.append(spanEl);
-    // let uvi = parseInt(current.uvi);
     if (uvi < 3) {
         spanEl.style.backgroundColor = "#50C878";
         spanEl.style.color = "#FFF";
@@ -257,31 +236,29 @@ function displayCurrentWeather(data, name) {
 
 function displayForecast(days, timezone) {
     console.log("displaying Forecast");
-    console.log(days);
-    // 5-day forecast handles:
     let displayEl = document.getElementById("forecast-container");
     emptyElement(displayEl);
 
     for (let i = 0; i < 5; i++) {
-        let cardEl = document.createElement("div");
-        displayEl.append(cardEl);
-        cardEl.className = "tile is-child is-2 px-1";
-        cardEl.style.backgroundColor = "#3e8dcf";
-        cardEl.style.color = "white";
-        cardEl.style.borderRadius = "4px";
+        let messageEl = document.createElement("article");
+        messageEl.className = "message is-info forecast";
+        displayEl.append(messageEl);
+
         // date
-        let dateEl = document.createElement("h3");
-        cardEl.append(dateEl);
-        // dateEl.style.className = "is-size-5";
-        dateEl.textContent = `${dayjs()
+        let headerEl = document.createElement("div");
+        messageEl.append(headerEl);
+        headerEl.className = "message-header";
+        headerEl.textContent = `${dayjs()
             .add(i + 1, "day")
             .tz(timezone)
             .format("MMM D, YYYY")}`;
-        // icon for weather conditions
 
-        // temperature
-        // wind speed
-        // humidity
+        // icon for weather conditions
+        let bodyEl = document.createElement("div");
+        bodyEl.className = "message-body";
+        bodyEl.style.whiteSpace = "nowrap";
+        bodyEl.style.inlineSize = "min-content";
+        messageEl.append(bodyEl);
         let iconCode = days[i].weather[0].icon;
         let iconEl = document.createElement("img");
         iconEl.setAttribute(
@@ -290,25 +267,25 @@ function displayForecast(days, timezone) {
         );
         iconEl.setAttribute("alt", days[i].weather[0].description);
         iconEl.style.display = "inline";
-        iconEl.className = "image is-48x48 is-rounded";
-        cardEl.append(iconEl);
+        iconEl.className = "image is-48x48 is-rounded forecast-icon";
+        bodyEl.append(iconEl);
 
         // current weather
         // temperature
         let pEl = document.createElement("p");
         pEl.textContent = `Temp: ${days[i].temp.day}°F`;
-        cardEl.append(pEl);
+        bodyEl.append(pEl);
 
         // wind speed
         pEl = document.createElement("p");
         pEl.textContent = `Wind: ${days[i].wind_speed} MPH`;
-        cardEl.append(pEl);
+        bodyEl.append(pEl);
 
         // humidity
         pEl = document.createElement("p");
         pEl.textContent = `Humidity: ${days[i].humidity}%`;
-        pEl.style.paddingBottom = ".25rem";
-        cardEl.append(pEl);
+        // pEl.style.paddingBottom = ".25rem";
+        bodyEl.append(pEl);
     }
 }
 
@@ -321,11 +298,8 @@ document
     .addEventListener("click", function (event) {
         let target = event.target;
         if (target.id == "search-btn") {
-            //  console.log("search button")
             collectUserInput(event);
         } else if (target.className.includes("history-btn")) {
-            //  console.log(target)
-            // getWeatherInfo(target.value);
             getSavedSearch(target.textContent);
         }
     });

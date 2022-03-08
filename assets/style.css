@@ -1,8 +1,3 @@
-img {
-    background-color: #3e8dcf;
-    border-radius: 50%;
-}
-
 #search-alert {
     display: none;
 }
@@ -10,4 +5,28 @@ img {
 #search-help:hover {
     text-decoration: underline;
     cursor: pointer;
+    text-align: right;
 }
+
+#weather-header {
+    font-size: x-large;
+}
+
+.forecast {
+    margin: 0;
+    min-width: 200px;
+    flex: 0 0 19%;
+}
+
+img {
+    background-color: #3e8dcf;
+    border-radius: 50%;
+}
+
+@media screen  and (max-width: 400px ) {
+    .forecast {
+        min-width: 250px;
+        margin-top: 2px;
+    }
+}
+
