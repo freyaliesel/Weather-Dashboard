@@ -286,7 +286,7 @@ function displayForecast(days, timezone) {
         let iconEl = document.createElement("img");
         iconEl.setAttribute(
             "src",
-            `http://openweathermap.org/img/wn/${iconCode}@2x.png`
+            `https://openweathermap.org/img/wn/${iconCode}@2x.png`
         );
         iconEl.setAttribute("alt", days[i].weather[0].description);
         iconEl.style.display = "inline";
