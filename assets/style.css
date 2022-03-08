@@ -1,6 +1,5 @@
-img {
-    background-color: #3e8dcf;
-    border-radius: 50%;
+body {
+    background-color: bisque;
 }
 
 #search-alert {
@@ -10,4 +9,14 @@ img {
 #search-help:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+/* .current-icon {
+    background-color: #fff;
+    border-radius: 50%;
+} */
+
+img {
+    background-color: #3e8dcf;
+    border-radius: 50%;
 }
