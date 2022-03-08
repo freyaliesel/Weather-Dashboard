@@ -1,7 +1,3 @@
-body {
-    background-color: bisque;
-}
-
 #search-alert {
     display: none;
 }
@@ -11,10 +7,13 @@ body {
     cursor: pointer;
 }
 
-/* .current-icon {
-    background-color: #fff;
-    border-radius: 50%;
-} */
+.message-body {
+    background-color: #eff5fb;
+}
+
+#weather-header {
+    font-size: x-large;
+}
 
 img {
     background-color: #3e8dcf;

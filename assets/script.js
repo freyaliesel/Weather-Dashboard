@@ -169,31 +169,29 @@ function displayCurrentWeather(data, name) {
     emptyElement(headerEl);
 
     let current = data.current;
-    // icon for weather conditions
-    let iconCode = current.weather[0].icon;
-    let iconEl = document.createElement("img");
-    iconEl.setAttribute(
-        "src",
-        `http://openweathermap.org/img/wn/${iconCode}@2x.png`
-    );
-    iconEl.setAttribute("alt", current.weather[0].description);
-    iconEl.style.display = "inline";
-    iconEl.className = "image is-64x64 is-rounded current-icon";
-    headerEl.append(iconEl);
-
+    
     // City Name & date
-    let nameEl = document.createElement("p");
-    nameEl.className = "card-header-title";
+    let nameEl = document.getElementById("weather-header");
     nameEl.textContent = `${name} - ${dayjs()
         .tz(data.timezone)
         .format("MMM D, YYYY")}`;
-    headerEl.append(nameEl);
-
-    // empty the card of previous weather data
-    let cardEl = document.getElementById("weather-info");
-    emptyElement(cardEl);
-
-    // current weather
+        
+        // empty the card of previous weather data
+        let cardEl = document.getElementById("weather-info");
+        emptyElement(cardEl);
+        
+        // current weather
+        // icon for weather conditions
+        let iconCode = current.weather[0].icon;
+        let iconEl = document.createElement("img");
+        iconEl.setAttribute(
+            "src",
+            `http://openweathermap.org/img/wn/${iconCode}@2x.png`
+        );
+        iconEl.setAttribute("alt", current.weather[0].description);
+        iconEl.style.display = "inline";
+        iconEl.className = "image is-96x96 is-rounded";
+        cardEl.append(iconEl);
     // temperature
     let listEl = document.createElement("ul");
     listEl.style.listStyle = "none";
