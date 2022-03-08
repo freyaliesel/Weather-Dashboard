@@ -109,16 +109,16 @@ function getLocationInfo(location) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data);
-            if (data.cod) {
-                alert.style.display = "inline";
-                return;
-            } else {
+            // console.log(data);
+            // if (data.cod) {
+            //     alert.style.display = "inline";
+            //     return;
+            // } else {
                 // displayCurrentWeather(data);
                 // call function getting forecast information
-                // getForecast(data.coord);
+                // getForecast(data);
                 saveSearch(data);
-            }
+            // }
         });
 }
 
@@ -160,6 +160,7 @@ function getSavedSearch(name) {
 
 function getForecast(location) {
     console.log("getting forecast");
+    console.log(location);
     const PARAM = "&units=imperial&exclude=minutely,hourly";
     var lat = "lat=" + location.coords.lat;
     var lon = "&lon=" + location.coords.lon;
