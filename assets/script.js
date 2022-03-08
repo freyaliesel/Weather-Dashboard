@@ -63,6 +63,8 @@ function collectUserInput(event) {
 // parse user input for search parameters
 // THIS NEEDS MORE FINE TUNING FOR USER FRIENDLY EXPERIENCE
 function parseUserInput(input) {
+    console.log("parsing user input")
+
     let searchParam;
     let name;
     // found this as a snippet
@@ -71,22 +73,29 @@ function parseUserInput(input) {
     // needs its own further conditions to handle spaces in city name
     // then join them back together into the search parameters to call the function
     if (input.includes(",")) {
+        console.log("input includes comma");
+
         let state = input.slice(input.indexOf(",") + 1).trim();
         console.log(`string after slice: "${input}"\n new string: "${state}"`);
     }
     // if inner spaces, replace inner spaces with '+'
     else if (input.includes(" ")) {
+        console.log("input includes space")
+
         searchParam = input.replace(/ /g, "+");
         console.log("search parameters: " + searchParam);
     }
-
     // if just alphabetic, send it through unchanged
     else if (isAlpha(input)) {
+        console.log("input is all alphabetical");
+
         searchParam = input;
         name = input;
     }
     // if includes non-alphabetic characters other than spaces or commas, reject
     else {
+        console.log("input includes non-alphabetic characters other than spaces or commas");
+
         alert.style.display = "inline";
         return;
     }
