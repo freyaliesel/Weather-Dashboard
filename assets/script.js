@@ -240,12 +240,9 @@ function displayForecast(days, timezone) {
     emptyElement(displayEl);
 
     for (let i = 0; i < 5; i++) {
-        let columnEl = document.createElement("div");
-        columnEl.className = "column";
-        displayEl.append(columnEl);
         let messageEl = document.createElement("article");
-        messageEl.className = "message is-info";
-        columnEl.append(messageEl);
+        messageEl.className = "message is-info forecast";
+        displayEl.append(messageEl);
 
         // date
         let headerEl = document.createElement("div");
@@ -259,6 +256,8 @@ function displayForecast(days, timezone) {
         // icon for weather conditions
         let bodyEl = document.createElement("div");
         bodyEl.className = "message-body";
+        bodyEl.style.whiteSpace = "nowrap";
+        bodyEl.style.inlineSize = "min-content";
         messageEl.append(bodyEl);
         let iconCode = days[i].weather[0].icon;
         let iconEl = document.createElement("img");
@@ -285,7 +284,7 @@ function displayForecast(days, timezone) {
         // humidity
         pEl = document.createElement("p");
         pEl.textContent = `Humidity: ${days[i].humidity}%`;
-        pEl.style.paddingBottom = ".25rem";
+        // pEl.style.paddingBottom = ".25rem";
         bodyEl.append(pEl);
     }
 }
