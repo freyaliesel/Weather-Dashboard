@@ -27,6 +27,8 @@ Assignment is to build a weather dashboard that will run in the browser and feat
 >THEN I am again presented with current and future conditions for that city
 >```
 
+Made using [Bulma CSS Framework](https://bulma.io/)
+
 Repo can be found at [GitHub/freyaliesel](https://github.com/freyaliesel/Weather-Dashboard)
 
 ![Image of deployed page on Github Pages](./assets/images/live-page.png)
