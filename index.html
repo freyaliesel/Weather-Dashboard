@@ -24,10 +24,12 @@
                         <div class="field has-addons has-addons-right">
                             <div class="control is-expanded">
                                 <input id="search-field" class="input" type="text" placeholder="Search for a City" />
+                                <div class="level-left">
+                                    <p id="search-alert" class="help is-danger">
+                                        See help for search parameters
+                                    </p>
+                                </div>
                             </div>
-                            <p id="search-alert" class="help is-danger">
-                                See help for search parameters
-                            </p>
                             <div class="control">
                                 <button id="search-btn" class="button is-info" type="submit">
                                     Search
@@ -56,7 +58,8 @@
                     </div>
                 </article>
 
-                <div id="forecast-container" class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-space-evenly">
+                <div id="forecast-container"
+                    class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-space-evenly">
                     <!-- prototype
                         <div class="tile is-child card">forecasts</div> -->
                 </div>
@@ -74,12 +77,12 @@
                     </p>
                 </header>
                 <ul>
-                    <li>Check spelling.</li>
+                    <li>Search returns most populated city of that name.</li>
+                    <li>Can search for global cities.</i>
+                        <li>If in US, can narrow result by using city first, then state code, separated by comma
+                            <div class="ml-5">Example: Chicago, Il</div>
+                        </li>
                     <li>Alphabetic characters, commas, and spaces only.</li>
-                    <!-- <li>If in US, can narrow result by using city first, then state code, separated by comma
-                        <div class="ml-5">Example: Chicago, Il</div>
-                    </li>
-                    <li>If a common city name, search will return top 5 results</li> -->
                 </ul>
             </div>
         </div>

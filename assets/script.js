@@ -53,8 +53,8 @@ function collectUserInput(event) {
     console.log(city.length);
     if (city.length > 0) {
         console.log(`original string: "${city}"`);
-        parseUserInput(city);
         alert.style.display = "none";
+        parseUserInput(city);
     } else {
         alert.style.display = "inline";
     }
@@ -63,6 +63,8 @@ function collectUserInput(event) {
 // parse user input for search parameters
 // THIS NEEDS MORE FINE TUNING FOR USER FRIENDLY EXPERIENCE
 function parseUserInput(input) {
+    console.log("parsing user input");
+
     let searchParam;
     let name;
     // found this as a snippet
@@ -71,22 +73,31 @@ function parseUserInput(input) {
     // needs its own further conditions to handle spaces in city name
     // then join them back together into the search parameters to call the function
     if (input.includes(",")) {
+        console.log("input includes comma");
+
         let state = input.slice(input.indexOf(",") + 1).trim();
         console.log(`string after slice: "${input}"\n new string: "${state}"`);
     }
     // if inner spaces, replace inner spaces with '+'
     else if (input.includes(" ")) {
+        console.log("input includes space");
+
         searchParam = input.replace(/ /g, "+");
         console.log("search parameters: " + searchParam);
     }
-
     // if just alphabetic, send it through unchanged
     else if (isAlpha(input)) {
+        console.log("input is all alphabetical");
+
         searchParam = input;
         name = input;
     }
     // if includes non-alphabetic characters other than spaces or commas, reject
     else {
+        console.log(
+            "input includes non-alphabetic characters other than spaces or commas"
+        );
+
         alert.style.display = "inline";
         return;
     }
@@ -104,8 +115,13 @@ function getLocationInfo(location) {
             return response.json();
         })
         .then(function (data) {
-            saveSearch(data);
-            // }
+            if (data.cod == 404) {
+                console.log("404 error");
+                alert.style.display = "inline";
+                return;
+            } else {
+                saveSearch(data);
+            }
         });
 }
 
@@ -169,29 +185,29 @@ function displayCurrentWeather(data, name) {
     emptyElement(headerEl);
 
     let current = data.current;
-    
+
     // City Name & date
     let nameEl = document.getElementById("weather-header");
     nameEl.textContent = `${name} - ${dayjs()
         .tz(data.timezone)
         .format("MMM D, YYYY")}`;
-        
-        // empty the card of previous weather data
-        let cardEl = document.getElementById("weather-info");
-        emptyElement(cardEl);
-        
-        // current weather
-        // icon for weather conditions
-        let iconCode = current.weather[0].icon;
-        let iconEl = document.createElement("img");
-        iconEl.setAttribute(
-            "src",
-            `http://openweathermap.org/img/wn/${iconCode}@2x.png`
-        );
-        iconEl.setAttribute("alt", current.weather[0].description);
-        iconEl.style.display = "inline";
-        iconEl.className = "image is-96x96 is-rounded";
-        cardEl.append(iconEl);
+
+    // empty the card of previous weather data
+    let cardEl = document.getElementById("weather-info");
+    emptyElement(cardEl);
+
+    // current weather
+    // icon for weather conditions
+    let iconCode = current.weather[0].icon;
+    let iconEl = document.createElement("img");
+    iconEl.setAttribute(
+        "src",
+        `http://openweathermap.org/img/wn/${iconCode}@2x.png`
+    );
+    iconEl.setAttribute("alt", current.weather[0].description);
+    iconEl.style.display = "inline";
+    iconEl.className = "image is-96x96 is-rounded";
+    cardEl.append(iconEl);
     // temperature
     let listEl = document.createElement("ul");
     listEl.style.listStyle = "none";
